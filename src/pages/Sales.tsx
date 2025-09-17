@@ -385,7 +385,7 @@ const Sales: React.FC = () => {
           </h1>
           <p className="text-blue-100 text-lg">
             {isAdmin 
-              ? 'Sistema completo de gestión de ventas' 
+              ? 'Sistema completo de DAMIAN CUPO' 
               : 'Sistema de ventas rápidas BY DAMIAN '
             }
           </p>
