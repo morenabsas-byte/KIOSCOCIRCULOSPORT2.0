@@ -11,13 +11,14 @@ import Products from './pages/Products';
 import Stock from './pages/Stock';
 import Movements from './pages/Movements';
 import Transactions from './pages/Transactions';
+import Backups from './pages/Backups'; // ✅ NUEVO
 
 function App() {
   const { refreshData, isAdmin } = useStore();
   
   useEffect(() => {
     refreshData();
-  }, []);
+  }, [refreshData]);
 
   return (
     <Router>
@@ -38,9 +39,22 @@ function App() {
               path="products" 
               element={isAdmin ? <Products /> : <Navigate to="/" replace />} 
             />
-            <Route path="stock" element={isAdmin ? <Stock /> : <Navigate to="/" replace />} />
-            <Route path="movements" element={isAdmin ? <Movements /> : <Navigate to="/" replace />} />
-            <Route path="transactions" element={isAdmin ? <Transactions /> : <Navigate to="/" replace />} />
+            <Route 
+              path="stock" 
+              element={isAdmin ? <Stock /> : <Navigate to="/" replace />} 
+            />
+            <Route 
+              path="movements" 
+              element={isAdmin ? <Movements /> : <Navigate to="/" replace />} 
+            />
+            <Route 
+              path="transactions" 
+              element={isAdmin ? <Transactions /> : <Navigate to="/" replace />} 
+            />
+            <Route 
+              path="backups" 
+              element={isAdmin ? <Backups /> : <Navigate to="/" replace />} 
+            />
           </Route>
         </Routes>
       </ErrorBoundary>
