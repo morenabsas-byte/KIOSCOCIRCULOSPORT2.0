@@ -15,7 +15,7 @@ import {
   Menu,
   X,
   ChevronRight,
-  HardDrive // ✅ NUEVO
+  HardDrive
 } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import AdminLogin from './AdminLogin';
@@ -93,13 +93,13 @@ const Layout: React.FC = () => {
       description: "Historial completo de transacciones",
       adminOnly: true
     },
-    // ✅ NUEVO ÍTEM
+    // ✅ Backups visible para todos
     {
       to: "/backups",
       icon: HardDrive,
       label: "Backups",
       description: "Exportar/Importar y auto-backups",
-      adminOnly: true
+      adminOnly: false
     },
   ];
 
