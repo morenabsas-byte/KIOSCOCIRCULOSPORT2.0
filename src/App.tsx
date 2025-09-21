@@ -11,7 +11,7 @@ import Products from './pages/Products';
 import Stock from './pages/Stock';
 import Movements from './pages/Movements';
 import Transactions from './pages/Transactions';
-import Backups from './pages/Backups'; // ✅ NUEVO
+import Backups from './pages/Backups';
 
 function App() {
   const { refreshData, isAdmin } = useStore();
@@ -51,10 +51,8 @@ function App() {
               path="transactions" 
               element={isAdmin ? <Transactions /> : <Navigate to="/" replace />} 
             />
-            <Route 
-              path="backups" 
-              element={isAdmin ? <Backups /> : <Navigate to="/" replace />} 
-            />
+            {/* ✅ Backups accesible para todos los usuarios */}
+            <Route path="backups" element={<Backups />} />
           </Route>
         </Routes>
       </ErrorBoundary>
