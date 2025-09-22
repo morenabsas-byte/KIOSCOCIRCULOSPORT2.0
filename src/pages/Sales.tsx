@@ -6,6 +6,11 @@ import ProductCard from '../components/ProductCard';
 import Cart from '../components/Cart';
 
 const Sales: React.FC = () => {
+  const [businessConfig, setBusinessConfig] = useState({
+    businessName: 'CIRCULO SPORT',
+    logoUrl: null as string | null
+  });
+
   const { 
     products, 
     cart, 
@@ -27,6 +32,22 @@ const Sales: React.FC = () => {
   const [adminName, setAdminName] = useState('');
   const [initialCash, setInitialCash] = useState(0);
   
+  useEffect(() => {
+    // Cargar configuración del negocio
+    try {
+      const savedConfig = localStorage.getItem('business-config');
+      if (savedConfig) {
+        const parsed = JSON.parse(savedConfig);
+        setBusinessConfig({
+          businessName: parsed.businessName || 'CIRCULO SPORT',
+          logoUrl: parsed.logoUrl || null
+        });
+      }
+    } catch (error) {
+      console.error('Error loading business config:', error);
+    }
+  }, []);
+
   useEffect(() => {
     refreshData();
   }, []);
@@ -376,17 +397,25 @@ const Sales: React.FC = () => {
         <div className="absolute inset-0 bg-black opacity-40"></div>
         <div className="relative px-6 py-12 text-center">
           <div className="flex justify-center mb-4">
-            <div className="bg-white bg-opacity-20 rounded-full p-4">
-              <ShoppingCart className="h-12 w-12 text-white" />
+            <div className="bg-white bg-opacity-20 rounded-full p-4 flex items-center justify-center">
+              {businessConfig.logoUrl ? (
+                <img 
+                  src={businessConfig.logoUrl} 
+                  alt="Logo" 
+                  className="h-12 w-12 object-contain"
+                />
+              ) : (
+                <ShoppingCart className="h-12 w-12 text-white" />
+              )}
             </div>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">
-           CIRCULO SPORT
+            {businessConfig.businessName}
           </h1>
           <p className="text-blue-100 text-lg">
             {isAdmin 
-              ? 'Sistema completo de DAMIAN CUPO' 
-              : 'Sistema de ventas rápidas BY DAMIAN '
+              ? 'Sistema completo de gestión' 
+              : 'Sistema de ventas rápidas'
             }
           </p>
           <div className="mt-6 flex justify-center space-x-8 text-white">

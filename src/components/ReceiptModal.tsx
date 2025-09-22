@@ -9,6 +9,27 @@ interface ReceiptModalProps {
 }
 
 const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, sale }) => {
+  const [businessConfig, setBusinessConfig] = React.useState({
+    businessName: 'CIRCULO SPORT',
+    logoUrl: null as string | null
+  });
+
+  React.useEffect(() => {
+    // Cargar configuración del negocio
+    try {
+      const savedConfig = localStorage.getItem('business-config');
+      if (savedConfig) {
+        const parsed = JSON.parse(savedConfig);
+        setBusinessConfig({
+          businessName: parsed.businessName || 'CIRCULO SPORT',
+          logoUrl: parsed.logoUrl || null
+        });
+      }
+    } catch (error) {
+      console.error('Error loading business config:', error);
+    }
+  }, [isOpen]);
+
   if (!isOpen || !sale) return null;
   
   const getPaymentIcon = (method: string) => {
@@ -100,8 +121,15 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, sale }) =>
         <div id="receipt-content" className="p-6">
           <div className="receipt">
             <div className="header text-center border-b-2 border-gray-800 pb-4 mb-6">
-              <h1 className="text-2xl font-bold text-green-600">VILLANUEVA PÁDEL</h1>
-              <p className="text-sm text-gray-600">Complejo de Canchas de Pádel</p>
+              {businessConfig.logoUrl && (
+                <img 
+                  src={businessConfig.logoUrl} 
+                  alt="Logo" 
+                  className="h-16 w-auto mx-auto mb-2 object-contain"
+                />
+              )}
+              <h1 className="text-2xl font-bold text-green-600">{businessConfig.businessName}</h1>
+              <p className="text-sm text-gray-600">Sistema de Gestión</p>
             </div>
             
             <div className="space-y-2 mb-6">
@@ -194,7 +222,7 @@ const ReceiptModal: React.FC<ReceiptModalProps> = ({ isOpen, onClose, sale }) =>
             
             <div className="footer text-center mt-6 text-sm text-gray-500">
               <p>¡Gracias por su compra!</p>
-              <p>Villanueva Pádel - Sistema de Gestión</p>
+              <p>{businessConfig.businessName} - Sistema de Gestión</p>
             </div>
           </div>
         </div>

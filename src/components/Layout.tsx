@@ -15,14 +15,55 @@ import {
   Menu,
   X,
   ChevronRight,
-  HardDrive
+  HardDrive,
+  Settings as SettingsIcon
 } from 'lucide-react';
 import { useStore } from '../store/useStore';
 import AdminLogin from './AdminLogin';
 
+interface BusinessConfig {
+  businessName: string;
+  logoUrl: string | null;
+}
+
 const Layout: React.FC = () => {
   const { isAdmin, setAdmin } = useStore();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [businessConfig, setBusinessConfig] = useState<BusinessConfig>({
+    businessName: 'CIRCULO SPORT',
+    logoUrl: null
+  });
+
+  // Cargar configuración del negocio al iniciar
+  useEffect(() => {
+    loadBusinessConfig();
+    
+    // Escuchar cambios en la configuración
+    const handleConfigUpdate = (event: CustomEvent) => {
+      setBusinessConfig(event.detail);
+    };
+    
+    window.addEventListener('businessConfigUpdated', handleConfigUpdate as EventListener);
+    
+    return () => {
+      window.removeEventListener('businessConfigUpdated', handleConfigUpdate as EventListener);
+    };
+  }, []);
+
+  const loadBusinessConfig = () => {
+    try {
+      const savedConfig = localStorage.getItem('business-config');
+      if (savedConfig) {
+        const parsed = JSON.parse(savedConfig);
+        setBusinessConfig({
+          businessName: parsed.businessName || 'CIRCULO SPORT',
+          logoUrl: parsed.logoUrl || null
+        });
+      }
+    } catch (error) {
+      console.error('Error loading business config:', error);
+    }
+  };
   
   const handleLogout = () => {
     setAdmin(false);
@@ -101,6 +142,13 @@ const Layout: React.FC = () => {
       description: "Exportar/Importar y auto-backups",
       adminOnly: false
     },
+    {
+      to: "/settings",
+      icon: SettingsIcon,
+      label: "Configuración",
+      description: "Personalizar nombre y logo del negocio",
+      adminOnly: true
+    },
   ];
 
   const visibleItems = navigationItems.filter(item => !item.adminOnly || isAdmin);
@@ -119,9 +167,17 @@ const Layout: React.FC = () => {
                 <Menu className="h-6 w-6" />
               </button>
               
-              <Home className="h-8 w-8 text-green-600 mr-3" />
+              {businessConfig.logoUrl ? (
+                <img 
+                  src={businessConfig.logoUrl} 
+                  alt="Logo" 
+                  className="h-8 w-8 object-contain mr-3"
+                />
+              ) : (
+                <Home className="h-8 w-8 text-green-600 mr-3" />
+              )}
               <div>
-                <h1 className="text-xl font-bold text-gray-900">CIRCULO SPORT</h1>
+                <h1 className="text-xl font-bold text-gray-900">{businessConfig.businessName}</h1>
                 {isAdmin && (
                   <span className="text-xs text-green-600 font-medium">Modo Administrador</span>
                 )}
@@ -166,9 +222,17 @@ const Layout: React.FC = () => {
         {/* Sidebar Header */}
         <div className="flex items-center justify-between p-4 border-b bg-gradient-to-r from-green-50 to-blue-50 flex-shrink-0">
           <div className="flex items-center">
-            <Home className="h-6 w-6 text-green-600 mr-2" />
+            {businessConfig.logoUrl ? (
+              <img 
+                src={businessConfig.logoUrl} 
+                alt="Logo" 
+                className="h-6 w-6 object-contain mr-2"
+              />
+            ) : (
+              <Home className="h-6 w-6 text-green-600 mr-2" />
+            )}
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">CIRCULO SPORT</h2>
+              <h2 className="text-lg font-semibold text-gray-900">{businessConfig.businessName}</h2>
               <p className="text-sm text-gray-600">Sistema de Gestión</p>
             </div>
           </div>
@@ -244,8 +308,16 @@ const Layout: React.FC = () => {
         <div className="border-t border-gray-200 p-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
-                <Home className="h-4 w-4 text-green-600" />
+              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center overflow-hidden">
+                {businessConfig.logoUrl ? (
+                  <img 
+                    src={businessConfig.logoUrl} 
+                    alt="Logo" 
+                    className="h-4 w-4 object-contain"
+                  />
+                ) : (
+                  <Home className="h-4 w-4 text-green-600" />
+                )}
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-gray-900">Sistema v1.0</p>
