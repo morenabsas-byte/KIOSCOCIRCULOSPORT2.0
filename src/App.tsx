@@ -12,7 +12,6 @@ import Stock from './pages/Stock';
 import Movements from './pages/Movements';
 import Transactions from './pages/Transactions';
 import Backups from './pages/Backups';
-import Settings from './pages/Settings';
 
 function App() {
   const { refreshData, isAdmin } = useStore();
@@ -54,11 +53,6 @@ function App() {
             />
             {/* ✅ Backups accesible para todos los usuarios */}
             <Route path="backups" element={<Backups />} />
-            {/* ✅ Settings solo para administradores */}
-            <Route 
-              path="settings" 
-              element={isAdmin ? <Settings /> : <Navigate to="/" replace />} 
-            />
           </Route>
         </Routes>
       </ErrorBoundary>
